@@ -82,7 +82,7 @@ class FileImport extends ProcessPluginBase implements ContainerFactoryPluginInte
     $source = explode($this->configuration['delimiter'], $value);
     $files = [];
 
-    if(!file_exists($this->configuration['destination'])){
+    if (!file_exists($this->configuration['destination'])) {
       mkdir($this->configuration['destination'], 0775, TRUE);
     }
 
@@ -122,7 +122,9 @@ class FileImport extends ProcessPluginBase implements ContainerFactoryPluginInte
 
   /**
    * Returns a full path. Specify a file relative to the docroot.
+   *
    * @param $path
+   *
    * @return string
    */
   private function getRelativePathToRoot($path) {

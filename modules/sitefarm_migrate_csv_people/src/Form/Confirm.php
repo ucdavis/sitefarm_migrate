@@ -8,7 +8,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Url;
-use Drupal\user\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 
 class Confirm extends ConfirmFormBase implements ContainerInjectionInterface {
 
@@ -26,7 +26,7 @@ class Confirm extends ConfirmFormBase implements ContainerInjectionInterface {
 
   /**
    * @param \Drupal\sitefarm_migrate\SiteFarmMigrate $siteFarmMigrate
-   * @param \Drupal\user\PrivateTempStoreFactory $privateTempStorage
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $privateTempStorage
    */
   public function __construct(SiteFarmMigrate $siteFarmMigrate, PrivateTempStoreFactory $privateTempStorage) {
     $this->sitefarmMigrate = $siteFarmMigrate;
@@ -63,7 +63,7 @@ class Confirm extends ConfirmFormBase implements ContainerInjectionInterface {
     $form['overview'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('People CSV Import Confirmation'),
-      '#weight' => -1
+      '#weight' => -1,
     ];
 
     $form['description'] = [
@@ -91,7 +91,7 @@ class Confirm extends ConfirmFormBase implements ContainerInjectionInterface {
       "field" => $this->t('Field'),
       "row_1" => $this->t('First Row (header)'),
       "row_2" => $this->t('Second Row'),
-      "row_3" => $this->t('Third Row')
+      "row_3" => $this->t('Third Row'),
     ];
 
     # Remove headers we dont need
@@ -110,7 +110,7 @@ class Confirm extends ConfirmFormBase implements ContainerInjectionInterface {
     if ($migration === FALSE) {
       $form['error'] = [
         '#markup' => "There was an error generating a temporary migration.
-                Try clearing caches and uninstalling/reinstalling the migrate modules"
+                Try clearing caches and uninstalling/reinstalling the migrate modules",
       ];
       return $form;
     }
@@ -135,7 +135,7 @@ class Confirm extends ConfirmFormBase implements ContainerInjectionInterface {
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#weight' => 1
+      '#weight' => 1,
     ];
 
     return $form;
@@ -169,8 +169,8 @@ class Confirm extends ConfirmFormBase implements ContainerInjectionInterface {
     $migration->set('migration_dependencies', [
       'required' => [
         $migrationId_tags,
-        $migrationId_pt
-      ]
+        $migrationId_pt,
+      ],
     ]);
 
     $this->sitefarmMigrate->saveMigration($migration);
@@ -193,8 +193,7 @@ class Confirm extends ConfirmFormBase implements ContainerInjectionInterface {
 
     $this->sitefarmMigrate->saveMigration($migration_pt);
 
-
-    drupal_set_message("Migrations created");
+    $this->messenger()->addStatus("Migrations created");
 
     // Redirect to the migration overview
     $form_state->setRedirect("entity.migration_group.list");

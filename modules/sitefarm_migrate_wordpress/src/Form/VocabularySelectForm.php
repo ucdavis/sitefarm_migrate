@@ -29,7 +29,7 @@ class VocabularySelectForm extends FormBase {
     ];
 
     // Get destination node type(s)
-    $vocabularies = Vocabulary::loadMultiple();
+    $vocabularies = $this->loadVocabularies();
     $options = ['' => $this->t('Do not import')];
     foreach ($vocabularies as $vocabulary_id => $info) {
       $options[$vocabulary_id] = $info->label();
@@ -66,6 +66,13 @@ class VocabularySelectForm extends FormBase {
     $cached_values['tag_vocabulary'] = $form_state->getValue('tag_vocabulary');
     $cached_values['category_vocabulary'] = $form_state->getValue('category_vocabulary');
     $form_state->setTemporaryValue('wizard', $cached_values);
+  }
+
+  /**
+   * @return \Drupal\Core\Entity\EntityInterface[]|\Drupal\taxonomy\Entity\Vocabulary[]
+   */
+  protected function loadVocabularies() {
+    return Vocabulary::loadMultiple();
   }
 
 }

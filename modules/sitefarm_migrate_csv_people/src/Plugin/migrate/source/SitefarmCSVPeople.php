@@ -273,7 +273,8 @@ class SitefarmCSVPeople extends CSV implements ContainerFactoryPluginInterface {
    * @param $from
    * @param $nid
    *
-   * @return bool
+   * @return bool|\Drupal\Core\Entity\EntityInterface|\Drupal\redirect\Entity\Redirect
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createRedirect($from, $nid) {
     $from = trim($from, "/");
@@ -306,6 +307,8 @@ class SitefarmCSVPeople extends CSV implements ContainerFactoryPluginInterface {
     $this->deleteDoubleEntry($hash);
     // Save the redirect
     $redirect->save();
+
+    return $redirect;
   }
 
   /**

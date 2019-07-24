@@ -108,11 +108,11 @@ class Urls extends ProcessPluginBase implements ContainerFactoryPluginInterface 
         $cleanValues[$i]['title'] = $title;
       }
       else {
-        $this->setMessage('Url ' . $url . ' is invalid');
+        $this->messenger()->addStatus('Url ' . $url . ' is invalid');
       }
       $i++;
     }
-    if(empty($cleanValues)){
+    if (empty($cleanValues)) {
       return NULL;
     }
     return $cleanValues;
@@ -167,15 +167,6 @@ class Urls extends ProcessPluginBase implements ContainerFactoryPluginInterface 
     }
 
     return FALSE;
-  }
-
-  /**
-   * Wrapper method for the procedural drupal_set_message().
-   *
-   * @param $text
-   */
-  protected function setMessage($text) {
-    drupal_set_message($text, 'warning');
   }
 
 }

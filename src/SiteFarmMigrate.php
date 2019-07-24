@@ -10,7 +10,7 @@ use Drupal\migrate_plus\Plugin\MigrationConfigEntityPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
 
-class SiteFarmMigrate implements ContainerInjectionInterface{
+class SiteFarmMigrate implements ContainerInjectionInterface {
 
   /**
    * The migration plugin manager.
@@ -58,9 +58,11 @@ class SiteFarmMigrate implements ContainerInjectionInterface{
   /**
    * Create a new migration
    *
-   * @param string $pluginId
-   * @param string $newPluginId
-   * @return \Drupal\migrate_plus\Entity\Migration
+   * @param $pluginId
+   * @param $newPluginId
+   *
+   * @return bool|\Drupal\Core\Entity\EntityInterface|\Drupal\migrate_plus\Entity\Migration
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function createMigration($pluginId, $newPluginId) {
     try {
@@ -122,7 +124,10 @@ class SiteFarmMigrate implements ContainerInjectionInterface{
    * Save a migration permanently
    *
    * @param \Drupal\migrate_plus\Entity\Migration $migration
-   * @return \Drupal\migrate_plus\Entity\Migration | bool
+   *
+   * @return bool|\Drupal\migrate_plus\Entity\Migration
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function saveMigration(Migration $migration) {
 
@@ -141,8 +146,10 @@ class SiteFarmMigrate implements ContainerInjectionInterface{
   /**
    * Get a migration instance
    *
-   * @param string $id
-   * @return \Drupal\migrate\Plugin\Migration
+   * @param $id
+   *
+   * @return object
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function getMigrationInstance($id) {
 
@@ -153,7 +160,6 @@ class SiteFarmMigrate implements ContainerInjectionInterface{
     if (!$instance) {
       $this->plugin_manager->clearCachedDefinitions();
       drupal_flush_all_caches();
-      //$this->migrationConfigEntityPluginManager->createInstance($id);
       $instance = $this->plugin_manager->createInstance($id);
     }
 
@@ -162,10 +168,13 @@ class SiteFarmMigrate implements ContainerInjectionInterface{
 
   /**
    * Sets the time the migration was imported to now
-   * @param string $id
-   * @param int|bool $time
+   *
+   * @param $id
+   * @param bool $time
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function setMigrationLastImportedTime($id, $time = FALSE){
+  public function setMigrationLastImportedTime($id, $time = FALSE) {
     # Use now if no time was defined
     $time = $time === FALSE ? time() : $time;
 
@@ -189,7 +198,7 @@ class SiteFarmMigrate implements ContainerInjectionInterface{
   /**
    * @param $id
    */
-  public function deleteMigration($id){
+  public function deleteMigration($id) {
 
     # Delete the migration
     $this->database->delete('config')

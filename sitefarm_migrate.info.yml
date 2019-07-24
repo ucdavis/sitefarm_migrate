@@ -10,4 +10,4 @@ dependencies:
   - migrate_plus
   - bad_judgement
 
-version: 8.x-6.0
+version: 8.x-6.3

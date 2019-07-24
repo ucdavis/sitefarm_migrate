@@ -64,6 +64,7 @@ class ExistingTerm extends ProcessPluginBase implements ContainerFactoryPluginIn
    * @param null $name
    * @param null $vocabulary
    * @param string $mode
+   *
    * @return null
    */
   protected function getTidByName($name = NULL, $vocabulary = NULL, $mode = "name") {
@@ -74,7 +75,7 @@ class ExistingTerm extends ProcessPluginBase implements ContainerFactoryPluginIn
 
     if (!empty($name)) {
       // Trim the value, remove quotes, spaces, etc from the start and end of the string.
-      $name = trim(trim($name,'"\''));
+      $name = trim(trim($name, '"\''));
       $properties['name'] = $name;
     }
     if (!empty($vocabulary)) {

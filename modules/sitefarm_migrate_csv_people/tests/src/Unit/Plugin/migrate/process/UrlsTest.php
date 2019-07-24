@@ -112,17 +112,17 @@ class UrlsTest extends UnitTestCase {
       ['http://link.com?id=1&amp;name=joe', 'http://link.com?id=1&name=joe'],
       [
         'http%3A%2F%2Flink.com%3Fid%3D1%26name%3Djoe',
-        'http://link.com?id=1&name=joe'
+        'http://link.com?id=1&name=joe',
       ],
       ['http://link.com?id=1;name=joe', FALSE],
       ["'http://link.com?id=1;name=joe'", FALSE],
       [
         'ftp://billgates:moremoney@files.microsoft.com/special/secretplans',
-        'ftp://billgates:moremoney@files.microsoft.com/special/secretplans'
+        'ftp://billgates:moremoney@files.microsoft.com/special/secretplans',
       ],
       [
         'billgates:moremoney@files.microsoft.com/special/secretplans',
-        'http://billgates:moremoney@files.microsoft.com/special/secretplans'
+        'http://billgates:moremoney@files.microsoft.com/special/secretplans',
       ],
     ];
   }

@@ -1,6 +1,0 @@
-sitefarm.cascade_migrate:
-  title: Add Cascade Migration
-  route_name: sitefarm_migrate_cascade
-
-  appears_on:
-    - entity.migration_group.list

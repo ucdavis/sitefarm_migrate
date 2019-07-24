@@ -1,4 +1,0 @@
-services:
-  sitefarm_migrate_cascade_test.cascade_testdata:
-    class: Drupal\sitefarm_migrate_cascade_test\Controller\CascadeTestData
-    arguments: ["@module_handler"]

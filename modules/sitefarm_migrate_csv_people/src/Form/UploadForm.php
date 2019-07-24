@@ -8,7 +8,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\user\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use \Drupal\Core\Extension\ModuleHandlerInterface;
 use \Drupal\Core\File\FileSystemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -18,7 +18,7 @@ use Drupal\Core\Database\Database;
 class UploadForm extends FormBase implements ContainerInjectionInterface {
 
   /**
-   * @var \Drupal\user\PrivateTempStoreFactory
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
   protected $privateTempStorage;
 
@@ -82,7 +82,7 @@ class UploadForm extends FormBase implements ContainerInjectionInterface {
       $form['error'] = [
         '#weight' => 0,
         '#markup' => "This module is incompatible with the module migrate_drupal.<br/>
-                Please disable module \"migrate_drupal\" or put this line in settings.php: <b>\$databases['migrate']['default'] = \$databases['default']['default'];</b>"
+                Please disable module \"migrate_drupal\" or put this line in settings.php: <b>\$databases['migrate']['default'] = \$databases['default']['default'];</b>",
       ];
       return $form;
     }
@@ -91,7 +91,7 @@ class UploadForm extends FormBase implements ContainerInjectionInterface {
     if ($this->fileSystem->realpath("private://") == FALSE) {
       $form['error'] = [
         '#weight' => 0,
-        '#markup' => "ERROR: The private file system is not set. Please configure the private file system in settings.php."
+        '#markup' => "ERROR: The private file system is not set. Please configure the private file system in settings.php.",
       ];
       return $form;
     }
@@ -110,7 +110,7 @@ class UploadForm extends FormBase implements ContainerInjectionInterface {
       '#weight' => 0,
       '#markup' => "This wizard generates a migration to import people from a CSV File.<br/>
                 Please follow  " . $link . " to create a CSV
-                file of all the people that need to be imported"
+                file of all the people that need to be imported",
     ];
 
     $form['file'] = [
@@ -185,7 +185,7 @@ class UploadForm extends FormBase implements ContainerInjectionInterface {
     $filename_tags = "private://csv_import/" . md5(file_get_contents($file)) . "_tags.csv";
 
     // Make sure the folder exists
-    if(!file_exists("private://csv_import")){
+    if (!file_exists("private://csv_import")) {
       mkdir("private://csv_import");
     }
 

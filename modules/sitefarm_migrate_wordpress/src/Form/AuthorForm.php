@@ -29,7 +29,7 @@ class AuthorForm extends FormBase {
 
     $form['default_author'] = [
       '#type' => 'textfield',
-      '#title' => t('Username of default content author:'),
+      '#title' => $this->t('Username of default content author:'),
       '#default_value' => (isset($cached_values['default_author'])) ? $cached_values['default_author'] : \Drupal::currentUser()
         ->getAccountName(),
       '#autocomplete_path' => 'user/autocomplete',
@@ -42,7 +42,7 @@ class AuthorForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getValue('perform_user_migration')) {
-      $account = user_load_by_name($form_state->getValue('default_author'));
+      $account = $this->userLoadByName($form_state->getValue('default_author'));
       if (!$account) {
         $form_state->setErrorByName('default_author_uid', $this->t('@name is not a valid username',
           ['@name' => $form_state->getValue('default_author')]));
@@ -55,12 +55,21 @@ class AuthorForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $cached_values = $form_state->getTemporaryValue('wizard');
-    $account = user_load_by_name($form_state->getValue('default_author'));
+    $account = $this->userLoadByName($form_state->getValue('default_author'));
     if ($account) {
       $cached_values['default_author'] = $form_state->getValue('default_author');
     }
 
     $form_state->setTemporaryValue('wizard', $cached_values);
+  }
+
+  /**
+   * @param $name
+   *
+   * @return bool|object
+   */
+  protected function userLoadByName($name) {
+    return user_load_by_name($name);
   }
 
 }

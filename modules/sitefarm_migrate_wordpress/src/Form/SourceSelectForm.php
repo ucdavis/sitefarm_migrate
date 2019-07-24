@@ -43,7 +43,7 @@ class SourceSelectForm extends FormBase {
       '#type' => 'file',
       '#title' => $this->t('WordPress exported file (WXR)'),
       '#description' => $this->t('Select an exported WordPress file. Maximum file size is @size.',
-        ['@size' => format_size(file_upload_max_size())]),
+        ['@size' => $this->formatSize($this->fileUploadMaxSize())]),
     ];
     return $form;
   }
@@ -73,7 +73,7 @@ class SourceSelectForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $validators = ['file_validate_extensions' => ['xml']];
-    if ($file = file_save_upload('wxr_file', $validators, 'public://', 0)) {
+    if ($file = $this->fileSaveUpload('wxr_file', $validators, 'public://', 0)) {
       $cached_values = $form_state->getTemporaryValue('wizard');
       $cached_values['file_uri'] = $file->getFileUri();
       $form_state->setTemporaryValue('wizard', $cached_values);
@@ -81,8 +81,35 @@ class SourceSelectForm extends FormBase {
       // @link https://www.drupal.org/node/2742301
     }
     else {
-      drupal_set_message($this->t('File upload failed.'));
+      $this->messenger()->addStatus($this->t('File upload failed.'));
     }
   }
 
+  /**
+   * @param $field
+   * @param $validator
+   * @param $dest
+   * @param $delta
+   *
+   * @return array|\Drupal\file\FileInterface|false|null
+   */
+  protected function fileSaveUpload($field, $validator, $dest, $delta) {
+    return file_save_upload($field, $validator, $dest, $delta);
+  }
+
+  /**
+   * @param $data
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   */
+  protected function formatSize($data) {
+    return format_size($data);
+  }
+
+  /**
+   * @return int
+   */
+  protected function fileUploadMaxSize() {
+    return file_upload_max_size();
+  }
 }

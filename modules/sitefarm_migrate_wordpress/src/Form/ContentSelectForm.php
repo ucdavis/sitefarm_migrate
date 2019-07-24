@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Simple wizard step form.
@@ -14,12 +15,27 @@ use Drupal\Core\Entity\EntityTypeManager;
 class ContentSelectForm extends FormBase implements ContainerInjectionInterface {
 
   /**
+   * @var array
+   */
+  private $articleTypes;
+
+  /**
+   * @var array
+   */
+  private $newsTypes;
+
+  /**
    * @var \Drupal\Core\Entity\EntityTypeManager
    */
   protected $entityTypeManager;
 
   /**
+   * ContentSelectForm constructor.
+   *
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function __construct(EntityTypeManager $entityTypeManager) {
     $this->entityTypeManager = $entityTypeManager;
@@ -54,7 +70,7 @@ class ContentSelectForm extends FormBase implements ContainerInjectionInterface 
     ];
 
     // Get destination node type(s)
-    $node_types = node_type_get_types();
+    $node_types = $this->nodeTypeGetTypes();
     $options = ['' => $this->t('Do not import')];
     foreach ($node_types as $node_type => $info) {
       $options[$node_type] = $info->get('name');
@@ -151,6 +167,8 @@ class ContentSelectForm extends FormBase implements ContainerInjectionInterface 
 
   /**
    * @return array
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getArticleTypes() {
     $articleTypes = [];
@@ -164,6 +182,8 @@ class ContentSelectForm extends FormBase implements ContainerInjectionInterface 
 
   /**
    * @return array
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getNewsTypes() {
     $newsTypes = [];
@@ -173,6 +193,13 @@ class ContentSelectForm extends FormBase implements ContainerInjectionInterface 
       $newsTypes[$id] = $term->get('name')->getValue()[0]['value'];
     }
     return $newsTypes;
+  }
+
+  /**
+   * @return \Drupal\node\NodeTypeInterface[]
+   */
+  protected function nodeTypeGetTypes() {
+    return NodeType::loadMultiple();
   }
 
 }

@@ -14,7 +14,7 @@ use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\Core\Database\Connection;
 use Drupal;
 use DOMDocument;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Path\AliasManager;
 
 /**
@@ -54,15 +54,18 @@ class SitefarmWordpressContent extends Url implements ContainerFactoryPluginInte
   protected $containerAwareEventDispatcher;
 
   /**
+   * SitefarmWordpressContent constructor.
+   *
    * @param array $configuration
-   * @param string $plugin_id
-   * @param mixed $plugin_definition
+   * @param $plugin_id
+   * @param $plugin_definition
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    * @param \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher $containerAwareEventDispatcher
    * @param \Drupal\Core\Database\Connection $database
-   * @param \Drupal\Core\Entity\EntityManager $entitymanager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entitymanager
+   * @param \Drupal\Core\Path\AliasManager $aliasManager
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ContainerAwareEventDispatcher $containerAwareEventDispatcher, Connection $database, EntityManager $entitymanager, AliasManager $aliasManager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ContainerAwareEventDispatcher $containerAwareEventDispatcher, Connection $database, EntityTypeManagerInterface $entitymanager, AliasManager $aliasManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->containerAwareEventDispatcher = $containerAwareEventDispatcher;
 
@@ -135,6 +138,8 @@ class SitefarmWordpressContent extends Url implements ContainerFactoryPluginInte
   /**
    * @param $event
    *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function onPostImport($event) {
@@ -149,12 +154,13 @@ class SitefarmWordpressContent extends Url implements ContainerFactoryPluginInte
     // Loop through the nodes
     foreach ($ids as $sourceId => $destId) {
       // Grab the node body
+
       $node = $this->entitymanager->getStorage('node')->load($destId);
       $body = $node->get('body')->getValue();
 
       // Strip the base url from the html
       $newBody = $this->stripBaseUrl($body[0]['value']);
-      if($newBody != $body[0]['value']){
+      if ($newBody != $body[0]['value']) {
         $body[0]['value'] = $newBody;
         $node->get('body')->setValue($body);
         $node->save();
@@ -288,7 +294,7 @@ class SitefarmWordpressContent extends Url implements ContainerFactoryPluginInte
 
     $doc = new DOMDocument();
     try {
-      $doc->loadHTML($body,  LIBXML_HTML_NODEFDTD);
+      $doc->loadHTML($body, LIBXML_HTML_NODEFDTD);
     } catch (Exception $e) {
       // When the HTML is really bad, we will end up here
       return $body;
@@ -328,7 +334,8 @@ class SitefarmWordpressContent extends Url implements ContainerFactoryPluginInte
    * @param $from
    * @param $nid
    *
-   * @return bool
+   * @return bool|\Drupal\Core\Entity\EntityInterface|\Drupal\redirect\Entity\Redirect
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   function createRedirect($from, $nid) {
     // Trim slashes from the old URL.
@@ -370,6 +377,8 @@ class SitefarmWordpressContent extends Url implements ContainerFactoryPluginInte
     $this->deleteDoubleEntry($hash);
     // Save the redirect
     $redirect->save();
+
+    return $redirect;
   }
 
   /**
