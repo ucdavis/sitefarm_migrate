@@ -1,0 +1,36 @@
+id: sf_csv_people_tags
+label: People Tags Import from CSV
+migration_group: sitefarmcsvpeople
+migration_tags:
+  - SiteFarm
+source:
+  created: 0
+  last_import: 0
+  plugin: csv
+  path: /dev/null
+  header_row_count: 1
+  keys:
+    - tags
+  column_names:
+    0:
+      tags: Identifier
+process:
+  vid:
+    plugin: default_value
+    default_value: sf_tags
+  name:
+    -
+      plugin: explode
+      source: tags
+      limit: 99
+      delimiter: '|'
+    -
+      plugin: existing_term
+      vocabulary: sf_tags
+      mode: name
+    -
+      plugin: skip_on_empty
+      method: row
+
+destination:
+  plugin: entity:taxonomy_term

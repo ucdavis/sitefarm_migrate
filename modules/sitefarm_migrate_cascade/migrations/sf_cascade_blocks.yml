@@ -1,0 +1,28 @@
+id: sf_cascade_blocks
+label: Cascade Migration - Blocks
+migration_group: sitefarmcascade
+migration_tags:
+  - SiteFarm
+source:
+  key: default
+  created: 0
+  last_import: 0
+  plugin: sitefarm_cascade_blocks
+  cascade_username: none
+  cascade_password: none
+  cascade_url: none
+  cascade_siteid: none
+  cascade_types: none
+destination:
+  plugin: entity:block_content
+  default_bundle: sf_basic
+  no_stub: true
+process:
+  id: id
+  info: info
+  'body/format':
+    plugin: default_value
+    default_value: 'basic_html'
+  'body/value':
+    plugin: cascade_body
+    source: body

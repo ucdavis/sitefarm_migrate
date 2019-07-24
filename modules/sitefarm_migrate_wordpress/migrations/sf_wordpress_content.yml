@@ -1,0 +1,92 @@
+id: sf_wordpress_content
+label: Import content from WordPress XML
+migration_group: sitefarmwordpress
+migration_tags:
+  - WordPress
+source:
+  plugin: sitefarm_wordpress_content
+  data_fetcher_plugin: http
+  data_parser_plugin: xml
+  # The item type selector (e.g. '[wp:post_type="post"]') is appended dynamically.
+  item_selector: /rss/channel/item
+  fields:
+    -
+      name: title
+      label: Content title
+      selector: title
+    -
+      name: post_id
+      label: Unique content ID
+      selector: wp:post_id
+    -
+      name: content
+      label: Body of the content
+      selector: content:encoded
+    -
+      name: excerpt
+      label: Excerpt of the content
+      selector: excerpt:encoded
+    -
+      name: pubDate
+      label: Publish date of the content
+      selector: pubDate
+    -
+      name: post_date
+      label: Post date of the content
+      selector: wp:post_date
+    -
+      name: status
+      label: Published status of the content
+      selector: wp:status
+    -
+      name: link
+      label: the link of the old content
+      selector: link
+    -
+      name: creator
+      label: Username of the content creator
+      selector: dc:creator
+    -
+      name: post_tag
+      label: Tags assigned to the content item
+      selector: 'category[@domain="post_tag"]/@nicename'
+    -
+      name: category
+      label: Categories assigned to the content item
+      selector: 'category[@domain="category"]/@nicename'
+    -
+      name: featured_image_id
+      label: Fetch the ID of a featured image attached to content
+      selector: 'wp:postmeta[wp:meta_key = "_thumbnail_id"]/wp:meta_value'
+  ids:
+    post_id:
+      type: integer
+process:
+  # type mapping is dynamically generated.
+  # uid mapping is dynamically generated.
+  # tag/category field mappings are dynamically generated.
+  title: title
+  'body/value':
+    plugin: sf_wordpress_body
+    source: content
+  'body/summary': excerpt
+  created:
+    plugin: callback
+    source: post_date
+    callable: strtotime
+  changed: '@created'
+  status:
+    plugin: static_map
+    source: status
+    default_value: 0
+    map:
+      publish: 1
+  'field_sf_primary_image/target_id':
+    plugin: sf_wordpress_primary_image
+    source: featured_image_id
+  'field_sf_primary_image/alt': featured_image_alt
+  'field_sf_primary_image/title': featured_image_title
+destination:
+  plugin: entity:node
+# Dependencies are dynamically generated.
+migration_dependencies: {}

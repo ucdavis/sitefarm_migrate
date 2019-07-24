@@ -1,0 +1,5 @@
+sitefarm.csv.people.upload:
+  title: Add People CSV Import
+  route_name: sitefarm.csv.people.upload
+  appears_on:
+    - entity.migration_group.list

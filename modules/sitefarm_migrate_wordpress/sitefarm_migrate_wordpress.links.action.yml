@@ -1,0 +1,5 @@
+sitefarm_migrate_wordpress.wizard:
+  title: Add Wordpress import
+  route_name: sitefarm_migrate_wordpress.wizard.import
+  appears_on:
+    - entity.migration_group.list

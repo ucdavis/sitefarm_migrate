@@ -1,0 +1,60 @@
+sitefarm_migrate_cascade:
+  path:
+    '/admin/structure/migrate/sitefarm/cascade'
+  defaults:
+    _form: '\Drupal\sitefarm_migrate_cascade\Form\LoginForm'
+    _title: 'Cascade Migration - Login'
+  requirements:
+    _permission: 'administer migrations'
+
+sitefarm.cascade_migrate.login:
+  path:
+    '/admin/structure/migrate/sitefarm/cascade/login'
+  defaults:
+    _form: '\Drupal\sitefarm_migrate_cascade\Form\LoginForm'
+    _title: 'Cascade Migration - Login'
+  requirements:
+    _permission: 'administer migrations'
+
+sitefarm.cascade_migrate.site_select:
+  path:
+    '/admin/structure/migrate/sitefarm/cascade/site_select'
+  defaults:
+    _form: '\Drupal\sitefarm_migrate_cascade\Form\SiteSelect'
+    _title: 'Cascade Migration - Select Website'
+  requirements:
+    _permission: 'administer migrations'
+
+sitefarm.cascade_migrate_site.options:
+  path:
+    '/admin/structure/migrate/sitefarm/cascade/options'
+  defaults:
+    _form: '\Drupal\sitefarm_migrate_cascade\Form\Options'
+    _title: 'Cascade Migration - Options'
+  requirements:
+    _permission: 'administer migrations'
+
+sitefarm.cascade_migrate.confirm:
+  path:
+    '/admin/structure/migrate/sitefarm/cascade/confirm'
+  defaults:
+    _form: '\Drupal\sitefarm_migrate_cascade\Form\Confirm'
+    _title: 'Cascade Migration - Confirm'
+  requirements:
+    _permission: 'administer migrations'
+
+sitefarm_migrate_cascade_import:
+  path:
+    '/admin/structure/migrate/sitefarm/cascade/import'
+  defaults:
+    _form: '\Drupal\sitefarm_migrate_cascade\Form\Import'
+  requirements:
+    _permission: 'administer migrations'
+
+sitefarm_migrate_cascade_test:
+  path:
+    '/admin/structure/migrate/sitefarm/cascade/test'
+  defaults:
+    _form: '\Drupal\sitefarm_migrate_cascade\Form\Test'
+  requirements:
+    _permission: 'administer migrations'

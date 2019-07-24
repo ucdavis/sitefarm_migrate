@@ -1,0 +1,36 @@
+id: sf_csv_people_pt
+label: People Person Types Import from CSV
+migration_group: sitefarmcsvpeople
+migration_tags:
+  - SiteFarm
+source:
+  created: 0
+  last_import: 0
+  plugin: csv
+  path: /dev/null
+  header_row_count: 1
+  keys:
+    - id
+  column_names:
+    0:
+      id: Identifier
+    8:
+      person_type: Person Type
+process:
+  vid:
+    plugin: default_value
+    default_value: sf_person_type
+  name:
+    -
+      plugin: explode
+      source: person_type
+      limit: 99
+      delimiter: '|'
+    -
+      plugin: existing_term
+      vocabulary: sf_person_type
+    -
+      plugin: skip_on_empty
+      method: row
+destination:
+  plugin: entity:taxonomy_term

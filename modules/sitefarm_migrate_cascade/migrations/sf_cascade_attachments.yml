@@ -1,0 +1,25 @@
+id: sf_cascade_attachments
+label: Cascade Migration - Attachments
+migration_group: sitefarmcascade
+migration_tags:
+  - SiteFarm
+source:
+  key: default
+  created: 0
+  last_import: 0
+  plugin: sitefarm_cascade_attachments
+  cascade_username: none
+  cascade_password: none
+  cascade_url: none
+  cascade_siteid: none
+  cascade_types: none
+process:
+  uid:
+    plugin: default_value
+    default_value: 1
+  fid: fid
+  filename: filename
+  uri: uri
+destination:
+  plugin: 'entity:file'
+migration_dependencies: {  }

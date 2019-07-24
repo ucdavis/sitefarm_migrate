@@ -1,0 +1,4 @@
+services:
+  sitefarm_migrate.sitefarm_migrate:
+    class: Drupal\sitefarm_migrate\SiteFarmMigrate
+    arguments: ["@plugin.manager.migration","@database"]

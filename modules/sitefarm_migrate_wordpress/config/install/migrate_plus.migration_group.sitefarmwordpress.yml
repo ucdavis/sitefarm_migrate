@@ -1,0 +1,8 @@
+id: sitefarmwordpress
+label: SiteFarm Wordpress migrations
+description: This migration group contains all migrations related to Wordpress
+source_type: Custom tables
+dependencies:
+  enforced:
+    module:
+      - sitefarm_migrate_wordpress

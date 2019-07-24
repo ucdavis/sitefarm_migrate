@@ -1,0 +1,10 @@
+name: SiteFarm People CSV import
+type: module
+description: 'Import people using a CSV file'
+package: SiteFarm
+core: 8.x
+dependencies:
+ - migrate_tools
+ - sitefarm_migrate
+ - migrate_source_csv
+ - cas

@@ -1,0 +1,11 @@
+id: sitefarmcascade
+label: SiteFarm Cascade migrations
+description: This migration group contains all migrations related to Cascade
+source_type: Custom tables
+shared_configuration:
+  source:
+    key: default
+dependencies:
+  enforced:
+    module:
+      - sitefarm_migrate_cascade

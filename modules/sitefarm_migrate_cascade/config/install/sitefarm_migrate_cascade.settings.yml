@@ -1,0 +1,8 @@
+# Please override these settings in the settings.php file or in a privately accessed file outside the docroot:
+# $config['sitefarm_migrate_cascade.settings']['username'] = "USERNAME";
+# $config['sitefarm_migrate_cascade.settings']['password'] = "PASSWORD";
+# $config['sitefarm_migrate_cascade.settings']['cascade_url'] = "http://my_cascade_server.com/";
+
+cascade_url: ''
+username: 
+password: 

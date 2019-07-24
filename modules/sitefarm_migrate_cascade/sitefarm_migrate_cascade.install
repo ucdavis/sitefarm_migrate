@@ -1,0 +1,135 @@
+<?php
+
+function sitefarm_migrate_cascade_schema() {
+  $schema = [];
+  $schema['sitefarm_migrate_cascade_data'] = [
+    'fields' => [
+      'id' => [
+        'type' => 'char',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'data' => [
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+      ],
+      'updated' => [
+        'type' => 'int',
+        'length' => 11,
+        'not null' => FALSE,
+        'default' => 0
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  $schema['sitefarm_migrate_cascade_queue'] = [
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'length' => 11,
+        'not null' => TRUE
+      ],
+      'path' => [
+        'type' => 'text',
+        'not null' => FALSE,
+      ],
+      'cascade_id' => [
+        'type' => 'char',
+        'length' => 32,
+        'not null' => TRUE
+      ],
+      'url' => [
+        'type' => 'text',
+        'length' => 11,
+        'not null' => FALSE
+      ],
+      'type' => [
+        'type' => 'char',
+        'length' => 100,
+        'not null' => FALSE
+      ],
+      'migration_id' => [
+        'type' => 'char',
+        'length' => 100,
+        'not null' => FALSE
+      ],
+      'article_tid' => [
+        'type' => 'int',
+        'length' => 11,
+        'not null' => FALSE
+      ],
+      'category_tid' => [
+        'type' => 'int',
+        'length' => 11,
+        'not null' => FALSE
+      ],
+      'tags' => [
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'type' => ['type'],
+      'cascade_id' => ['cascade_id'],
+      'migration_id' => ['migration_id']
+    ],
+  ];
+
+  $schema['sitefarm_migrate_cascade_redirect_mapping'] = [
+    'fields' => [
+      'id' => [
+        'type' => 'char',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'destid' => [
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  # We need to clear all Drupal caches to trigger migrate to rescan the folders
+  drupal_flush_all_caches();
+
+  return $schema;
+}
+
+function sitefarm_migrate_cascade_update_8101(&$sandbox) {
+  $messages = array();
+
+  $tags = [
+    'type' => 'text',
+    'size' => 'medium',
+    'not null' => FALSE,
+  ];
+
+  $schema = \Drupal::database()->schema();
+  $schema->addField('sitefarm_migrate_cascade_queue', 'tags', $tags);
+
+  return implode('<br />', $messages);
+}
+
+/**
+ * Uninstall Cascade migration module
+ */
+function sitefarm_migrate_cascade_update_8102(&$sandbox) {
+
+  $messages = [];
+
+  // Uninstall the Cascade migration module
+  \Drupal::service('module_installer')->uninstall(['sitefarm_migrate_cascade']);
+
+  $messages[] = t('Cascade migration module disabled');
+
+  return implode('<br />', $messages);
+}

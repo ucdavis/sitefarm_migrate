@@ -1,0 +1,4 @@
+services:
+  sitefarm_migrate_wordpress.wordpressmigrationgenerator:
+    class: Drupal\sitefarm_migrate_wordpress\WordPressMigrationGenerator
+    arguments: ["@sitefarm_migrate.sitefarm_migrate", "@entity_field.manager"]

@@ -1,0 +1,202 @@
+id: sf_csv_people
+label: People Import from CSV
+migration_group: sitefarmcsvpeople
+migration_tags:
+  - SiteFarm
+source:
+  created: 0
+  last_import: 0
+  plugin: sitefarm_csv_people
+  path: /dev/null
+  header_row_count: 1
+  keys:
+    - id
+  column_names:
+    0:
+      id: Identifier
+    1:
+      first_name: First Name
+    2:
+      middle_initial: Middle Initial
+    3:
+      last_name: Last Name
+    4:
+      name_prefix: Name Prefix
+    5:
+      credentials: Credentials
+    6:
+      position_title: Title
+    7:
+      unit: Unit
+    8:
+      person_type: Person Type
+    9:
+      email: Email
+    10:
+      phone: Phone
+    11:
+      websites: Website
+    12:
+      office_hours: Office Hours
+    13:
+      office_location: Office Location
+    14:
+      countrycode: Country
+    15:
+      company: Company
+    16:
+      address1: Address
+    17:
+      address2: Address2
+    18:
+      city: City
+    19:
+      zipcode: Zip
+    20:
+      state: State
+    21:
+      bio_summary: Bio Summary
+    22:
+      bio: Bio
+    23:
+      hide_from_dir: Hidden from lists
+    24:
+      featured: Featured
+    25:
+      tags: Tags
+    26:
+      documents: Documents
+    27:
+      portrait_image: Primary Image
+    28:
+      url: Url
+    29:
+      cas: Cas ID
+process:
+  type:
+    plugin: default_value
+    default_value: sf_person
+  field_sf_first_name:
+    plugin: callback
+    callable: trim
+    source: first_name
+  field_sf_middle_initial:
+    plugin: callback
+    callable: trim
+    source: middle_initial
+  field_sf_last_name:
+    plugin: callback
+    callable: trim
+    source: last_name
+  field_sf_name_prefix:
+    plugin: callback
+    callable: trim
+    source: name_prefix
+  field_sf_position_title:
+    plugin: callback
+    callable: trim
+    source: position_title
+  field_sf_credentials:
+    plugin: callback
+    callable: trim
+    source: credentials
+  # This will get overwritten in the wizard
+  field_sf_person_type:
+    plugin: existing_term
+    mode: tid
+    vocabulary: sf_person_type
+    source: person_type
+  field_sf_unit:
+    -
+      plugin: explode
+      source: unit
+      limit: 99
+      delimiter: '|'
+    -
+      plugin: callback
+      callable: trim
+  field_sf_emails:
+    -
+      plugin: explode
+      source: email
+      limit: 4
+      delimiter: '|'
+    -
+      plugin: callback
+      callable: trim
+  field_sf_phone_numbers:
+    -
+      plugin: explode
+      source: phone
+      limit: 4
+      delimiter: '|'
+    -
+      plugin: callback
+      callable: trim
+  'field_sf_websites':
+    plugin: sf_urls
+    source: websites
+    delimiter: '|'
+  field_sf_tags:
+    plugin: existing_term
+    mode: tid
+    vocabulary: sf_tags
+    source: tags
+  field_hide_from_lists: hide_from_dir
+  field_sf_featured_status: featured
+  field_sf_office_hours:
+    plugin: callback
+    callable: trim
+    source: office_hours
+  field_sf_office_location:
+    plugin: callback
+    callable: trim
+    source: office_location
+  'field_sf_address/country_code':
+    plugin: callback
+    callable: trim
+    source: countrycode
+  'field_sf_address/organization':
+    plugin: callback
+    callable: trim
+    source: company
+  'field_sf_address/address_line1':
+    plugin: callback
+    callable: trim
+    source: address1
+  'field_sf_address/address_line2':
+    plugin: callback
+    callable: trim
+    source: address2
+  'field_sf_address/locality':
+    plugin: callback
+    callable: trim
+    source: city
+  'field_sf_address/postal_code':
+    plugin: callback
+    callable: trim
+    source: zipcode
+  'field_sf_address/administrative_area':
+    plugin: callback
+    callable: trim
+    source: state
+  'field_sf_address/langcode':
+    plugin: default_value
+    default_value: en
+  field_sf_files:
+    plugin: sf_file_import
+    source: documents
+    delimiter: '|'
+    destination: "public://files/person"
+  'field_sf_primary_image':
+      plugin: sf_file_import
+      source: portrait_image
+      destination: "public://images/person"
+  'body/value': bio
+  'body/summary': bio_summary
+  'body/format':
+    plugin: default_value
+    default_value: basic_html
+  uid: uid
+destination:
+  plugin: entity:node

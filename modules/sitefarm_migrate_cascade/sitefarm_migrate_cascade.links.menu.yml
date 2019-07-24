@@ -1,0 +1,5 @@
+sitefarm.cascade_migrate.wizard:
+  title: 'Cascade Migration Generator'
+  route_name: sitefarm_migrate_cascade
+  description: 'Migrate content from a Cascade website'
+  parent: entity.migration_group.list

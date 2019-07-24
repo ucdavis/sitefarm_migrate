@@ -1,0 +1,114 @@
+<?php
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Add test migrations to the migrations list
+ */
+function sitefarm_migrate_cascade_test_install(){
+  /** @var Drupal\sitefarm_migrate\SiteFarmMigrate $sitefarm_migrate */
+  $sitefarm_migrate = Drupal::service("sitefarm_migrate.sitefarm_migrate");
+  /** @var Drupal\sitefarm_migrate_cascade\Controller\CascadeMigrate $cascade_migrate */
+  $cascade_migrate = Drupal::service("sitefarm_migrate_cascade.cascade_migrate");
+
+  // Create a people migration from Cascade
+  $label = "Cascade People Testimport";
+  $migrationID = "sf_cascade_test_people";
+  $cascade_migrate->setMigrationID($migrationID);
+
+  $migration = $sitefarm_migrate->createMigration('sf_cascade_people', $migrationID);
+  if ($migration === FALSE) {
+    return FALSE;
+  }
+  $migration->set("label", $label);
+  $source = $migration->get("source");
+  $source['cascade_types'] = ['people'];
+  $source['is_test'] = TRUE;
+  $migration->set("source", $source);
+
+  $sitefarm_migrate->saveMigration($migration);
+
+  // Add one item with dummy info to the people test queue
+  $handler = new stdClass();
+  $handler->path = "testdata";
+  $handler->cascade_id = "testdata";
+  $handler->type = "people";
+  $handler->url = "";
+  $handler->article_tid = 0;
+  $handler->category_tid = 0;
+  $handler->tags = "Testtag";
+
+  $cascade_migrate->add_to_queue($handler);
+
+
+  // Create a pages migration from Cascade
+  $label = "Cascade Pages Testimport";
+  $migrationID = "sf_cascade_test_pages";
+  $cascade_migrate->setMigrationID($migrationID);
+
+  $migration = $sitefarm_migrate->createMigration('sf_cascade_pages', $migrationID);
+  if ($migration === FALSE) {
+    return FALSE;
+  }
+
+  $migration->set("label", $label);
+  $source = $migration->get("source");
+  $source['cascade_types'] = ['menu,pages'];
+  $source['is_test'] = TRUE;
+  $migration->set("source", $source);
+
+  $sitefarm_migrate->saveMigration($migration);
+
+  // Add items with dummy info to the pages test queue
+  $handler = new stdClass();
+  $handler->type = "page";
+  $handler->article_tid = 0;
+  $handler->category_tid = 0;
+  $handler->tags = "Testtag";
+
+  $handler->path = "testpage";
+  $handler->cascade_id = "testpage";
+  $handler->url = "/testpage";
+  $cascade_migrate->add_to_queue($handler);
+
+  // Create attachments migration. The pages migration will automagically add
+  // items to this queue
+  $label = "Cascade Pages Testimport - Attachments";
+  $migrationID = "sf_cascade_test_pages_att";
+  $cascade_migrate->setMigrationID($migrationID);
+
+  $migration = $sitefarm_migrate->createMigration('sf_cascade_attachments', $migrationID);
+  if ($migration === FALSE) {
+    return FALSE;
+  }
+
+  $migration->set("label", $label);
+  $source = $migration->get("source");
+  $source['is_test'] = TRUE;
+  $migration->set("source", $source);
+
+  $sitefarm_migrate->saveMigration($migration);
+
+
+}
+
+/**
+ * Uninstall hook
+ */
+function sitefarm_migrate_cascade_test_uninstall() {
+  /** @var Drupal\sitefarm_migrate\SiteFarmMigrate $sitefarm_migrate */
+  $sitefarm_migrate = Drupal::service("sitefarm_migrate.sitefarm_migrate");
+  /** @var \Drupal\Core\Database\Connection $db */
+  $db = Drupal::service("database");
+
+  // Delete the test data
+  $db->delete("sitefarm_migrate_cascade_queue")
+    ->condition("migration_id",
+      ["sf_cascade_test_people","sf_cascade_test_pages","sf_cascade_test_pages_att"], "IN")
+    ->execute();
+
+
+  // Delete the test migrations from the system
+  $sitefarm_migrate->deleteMigration("sf_cascade_test_people");
+  $sitefarm_migrate->deleteMigration("sf_cascade_test_pages");
+}

@@ -1,0 +1,50 @@
+id: sf_cascade_people
+label: Cascade Migration - People
+migration_group: sitefarmcascade
+migration_tags:
+  - SiteFarm
+source:
+  key: default
+  created: 0
+  last_import: 0
+  plugin: sitefarm_cascade_people
+  cascade_username: none
+  cascade_password: none
+  cascade_url: none
+  cascade_siteid: none
+  cascade_types: none
+destination:
+  plugin: entity:node
+process:
+  type:
+    plugin: default_value
+    default_value: sf_person
+  field_sf_name_prefix: prefix
+  field_sf_first_name: first_name
+  field_sf_last_name: last_name
+  field_sf_position_title: position_title
+  field_sf_credentials: credentials
+  field_sf_unit: unit
+  field_sf_emails: email
+  field_sf_phone_numbers: phone
+  field_sf_websites: websites
+  field_sf_office_hours: office_hours
+  field_sf_office_location: office_location
+  'field_sf_address/country_code': countrycode
+  'field_sf_address/organization': company
+  'field_sf_address/address_line1': address1
+  'field_sf_address/address_line2': address2
+  'field_sf_address/locality': city
+  'field_sf_address/postal_code': zipcode
+  'field_sf_address/administrative_area': state
+  'field_sf_address/langcode':
+    plugin: default_value
+    default_value: en
+  'field_sf_primary_image/target_id': photo
+  'field_sf_primary_image/alt': photo_title
+  'field_sf_primary_image/title': photo_title
+
+  'body/value': bio
+  'body/format':
+    plugin: default_value
+    default_value: basic_html

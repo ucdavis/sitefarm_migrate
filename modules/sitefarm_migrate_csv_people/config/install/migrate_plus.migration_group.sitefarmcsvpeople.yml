@@ -1,0 +1,8 @@
+id: sitefarmcsvpeople
+label: SiteFarm CSV People migrations
+description: This migration group contains all migrations related to CSV People
+source_type: Custom tables
+dependencies:
+  enforced:
+    module:
+      - sitefarm_migrate_csv_people

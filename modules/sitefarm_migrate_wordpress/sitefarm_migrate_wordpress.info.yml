@@ -1,0 +1,8 @@
+name: 'Sitefarm WordPress migration support'
+description: 'Support for importing WordPress sites into Drupal'
+type: module
+package: SiteFarm
+core: 8.x
+dependencies:
+  - migrate_plus
+  - sitefarm_migrate

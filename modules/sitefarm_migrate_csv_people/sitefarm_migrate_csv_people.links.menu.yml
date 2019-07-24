@@ -1,0 +1,5 @@
+sitefarm.csv.people:
+  title: 'People CSV Import'
+  route_name: sitefarm.csv.people.upload
+  description: 'Import People from a CSV file'
+  parent: entity.migration_group.list

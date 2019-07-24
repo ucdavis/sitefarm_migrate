@@ -1,0 +1,17 @@
+sitefarm.csv.people.upload:
+  path:
+    '/admin/structure/migrate/sitefarm/people_csv'
+  defaults:
+    _form: '\Drupal\sitefarm_migrate_csv_people\Form\UploadForm'
+    _title: 'People CSV Import'
+  requirements:
+    _permission: 'administer migrations'
+
+sitefarm.csv.people.confirm:
+  path:
+    '/admin/structure/migrate/sitefarm/people_csv/confirm'
+  defaults:
+    _form: '\Drupal\sitefarm_migrate_csv_people\Form\Confirm'
+    _title: 'People CSV Import - Confirmation'
+  requirements:
+    _permission: 'administer migrations'

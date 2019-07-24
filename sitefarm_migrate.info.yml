@@ -1,0 +1,13 @@
+type: module
+name: SiteFarm Migrate
+description: 'Tools to assist running SiteFarm migrations.'
+package: SiteFarm
+core: 8.x
+dependencies:
+  - drupal:migrate (>=8.2)
+  - migrate_plus:migrate_plus
+  - migrate_tools
+  - migrate_plus
+  - bad_judgement
+
+version: 8.x-6.0

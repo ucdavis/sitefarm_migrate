@@ -1,0 +1,7 @@
+services:
+  sitefarm_migrate_cascade.cascade_api:
+    class: Drupal\sitefarm_migrate_cascade\CascadeApi
+    arguments: ["@database"]
+  sitefarm_migrate_cascade.cascade_migrate:
+    class: Drupal\sitefarm_migrate_cascade\Controller\CascadeMigrate
+    arguments: ["@sitefarm_migrate_cascade.cascade_api","@user.private_tempstore","@sitefarm_migrate.sitefarm_migrate","@database","@session_manager","@current_user","@config.factory","@file_system","@site.path", "@settings"]
